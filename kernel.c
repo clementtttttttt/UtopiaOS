@@ -3,9 +3,9 @@
 #include <stdint.h>
 #include "include/rmode.h"
 #include "include/graphics.h"
-#include "include/font.h"
+
 #include "include/asmfunc.h"
- 
+ #include "include/font.h"
 void init_vga(){
     regs16_t vgaregister;
   vgaregister.ax=0x0013;
@@ -13,11 +13,14 @@ void init_vga(){
 }
 
 
+
 void kernel_main(void) 
 {
   init_vga();
 
-  printstring(0xc);
-  printstring("utopiaos version alpha");
+  printhankaku ("!@#$%^&*()_+-=~[]\|}:?><},./\|");
+  printhankaku("abcdefghijklmnopqrstuvwxyz");
+  printhankaku("123$4567890");
+  
 }
- asm(".section .rodata");
+

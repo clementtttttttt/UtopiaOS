@@ -20,7 +20,7 @@ SECTIONS
 	}
  
 	/* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
+	.rodata BLOCK(4K) : ALIGN(8K)
 	{
 		*(.rodata)
 	}
@@ -37,7 +37,7 @@ SECTIONS
 		*(COMMON)
 		*(.bss)
 	}
- 
+
 	/* The compiler may produce other sections, by default it will put them in
 	   a segment with the same name. Simply add stuff here as needed. */
 } 
