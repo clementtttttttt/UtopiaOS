@@ -128,38 +128,53 @@ putfont:
 .LFE1:
 	.size	putfont, .-putfont
 	.align 16
-	.globl	printhankaku
-	.type	printhankaku, @function
-printhankaku:
+	.globl	printstring
+	.type	printstring, @function
+printstring:
 .LFB2:
 	.cfi_startproc
 	pushl	%ebx
 	.cfi_def_cfa_offset 8
 	.cfi_offset 3, -8
 	movl	8(%esp), %ebx
-	movzbl	(%ebx), %eax
-	testb	%al, %al
+	cmpb	$0, (%ebx)
 	je	.L42
+	movl	x, %edx
+	jmp	.L46
 	.align 16
 .L45:
 	sall	$4, %eax
+	addl	$1, %ebx
 	addl	$font, %eax
 	pushl	%eax
 	.cfi_def_cfa_offset 12
 	call	putfont
 	movl	x, %eax
+	leal	8(%eax), %edx
+	popl	%eax
+	.cfi_def_cfa_offset 8
+	movl	%edx, x
+	cmpb	$0, (%ebx)
+	je	.L42
+.L46:
+	cmpl	$320, %edx
+	jne	.L44
+	addl	$10, y
+.L44:
+	movzbl	(%ebx), %eax
+	cmpb	$8, %al
+	jne	.L45
+	pushl	$font
+	.cfi_def_cfa_offset 12
+	subl	$8, %edx
+	subb	$1, screencounter
+	movl	%edx, x
+	call	putfont
+	movzbl	(%ebx), %eax
 	popl	%edx
 	.cfi_def_cfa_offset 8
-	addl	$8, %eax
-	cmpl	$320, %eax
-	movl	%eax, x
-	jne	.L44
-	addl	$9, y
-.L44:
-	addl	$1, %ebx
-	movzbl	(%ebx), %eax
-	testb	%al, %al
-	jne	.L45
+	jmp	.L45
+	.align 16
 .L42:
 	popl	%ebx
 	.cfi_restore 3
@@ -167,41 +182,23 @@ printhankaku:
 	ret
 	.cfi_endproc
 .LFE2:
-	.size	printhankaku, .-printhankaku
+	.size	printstring, .-printstring
+	.align 16
+	.globl	newline
+	.type	newline, @function
+newline:
+.LFB3:
+	.cfi_startproc
+	movl	$0, x
+	addl	$10, y
+	ret
+	.cfi_endproc
+.LFE3:
+	.size	newline, .-newline
 	.align 16
 	.globl	init_vga
 	.type	init_vga, @function
 init_vga:
-.LFB3:
-	.cfi_startproc
-	subl	$52, %esp
-	.cfi_def_cfa_offset 56
-	movl	$19, %eax
-	movw	%ax, 28(%esp)
-	leal	14(%esp), %eax
-	pushl	%eax
-	.cfi_def_cfa_offset 60
-	pushl	$16
-	.cfi_def_cfa_offset 64
-	call	int32
-	addl	$60, %esp
-	.cfi_def_cfa_offset 4
-	ret
-	.cfi_endproc
-.LFE3:
-	.size	init_vga, .-init_vga
-	.section	.rodata.str1.1,"aMS",@progbits,1
-.LC0:
-	.string	"!@#$%^&*()_+-=~[]|}:?><},./|"
-.LC1:
-	.string	"abcdefghijklmnopqrstuvwxyz"
-.LC2:
-	.string	"123$4567890"
-	.text
-	.align 16
-	.globl	kernel_main
-	.type	kernel_main, @function
-kernel_main:
 .LFB4:
 	.cfi_startproc
 	subl	$52, %esp
@@ -214,18 +211,66 @@ kernel_main:
 	pushl	$16
 	.cfi_def_cfa_offset 64
 	call	int32
-	movl	$.LC0, (%esp)
-	call	printhankaku
-	movl	$.LC1, (%esp)
-	call	printhankaku
-	movl	$.LC2, (%esp)
-	call	printhankaku
 	addl	$60, %esp
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
 .LFE4:
+	.size	init_vga, .-init_vga
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.LC0:
+	.string	"Kernel sucessfully loaded."
+.LC1:
+	.string	"newline stress test."
+	.text
+	.align 16
+	.globl	kernel_main
+	.type	kernel_main, @function
+kernel_main:
+.LFB5:
+	.cfi_startproc
+	pushl	%ebx
+	.cfi_def_cfa_offset 8
+	.cfi_offset 3, -8
+	movl	$19, %eax
+	movl	$40, %ebx
+	subl	$48, %esp
+	.cfi_def_cfa_offset 56
+	movw	%ax, 28(%esp)
+	leal	14(%esp), %eax
+	pushl	%eax
+	.cfi_def_cfa_offset 60
+	pushl	$16
+	.cfi_def_cfa_offset 64
+	call	int32
+	movl	$.LC0, (%esp)
+	call	printstring
+	addl	$16, %esp
+	.cfi_def_cfa_offset 48
+	.align 16
+.L53:
+	subl	$12, %esp
+	.cfi_def_cfa_offset 60
+	addl	$10, y
+	movl	$0, x
+	pushl	$.LC1
+	.cfi_def_cfa_offset 64
+	call	printstring
+	addl	$16, %esp
+	.cfi_def_cfa_offset 48
+	subl	$1, %ebx
+	jne	.L53
+	addl	$40, %esp
+	.cfi_def_cfa_offset 8
+	popl	%ebx
+	.cfi_restore 3
+	.cfi_def_cfa_offset 4
+	ret
+	.cfi_endproc
+.LFE5:
 	.size	kernel_main, .-kernel_main
+	.comm	screencounter,1,1
+	.comm	screenchars,1000,32
 	.globl	y
 	.section	.bss
 	.align 4

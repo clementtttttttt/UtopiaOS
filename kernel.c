@@ -18,9 +18,11 @@ void kernel_main(void)
 {
   init_vga();
 
-  printhankaku ("!@#$%^&*()_+-=~[]\|}:?><},./\|");
-  printhankaku("abcdefghijklmnopqrstuvwxyz");
-  printhankaku("123$4567890");
+  printstring("Kernel sucessfully loaded.");
+  
+
+
+
   
 }
 
