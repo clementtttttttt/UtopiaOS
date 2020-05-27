@@ -16,7 +16,7 @@ void kernel_main(void)
   init_vga();
 
   drawtile(sysfont_r,15,0,1);
-  drawtile(sysfont_u,15,8,1);
+  drawtile(sysfont_z,15,8,1);
   
 }
 
