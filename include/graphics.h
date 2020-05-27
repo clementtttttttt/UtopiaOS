@@ -1,9 +1,9 @@
-void drawtile(char input[8][8],char colorcode,char offsetx,char offsety){
+void drawtile(char input[8][8],char colorcode,char offx,char offy){
     char *vramaddr;
     for(int x=0;x<8;x++){
         for(int y=0;y<8;y++){
             if (input[y][x]=='0'){
-                vramaddr=(char*)0xa0000+(x+offsetx)+(offsety+y)*320;
+                vramaddr=(char*)0xa0000+(x+offx)+(offy+y)*320;
                     *vramaddr=colorcode;
 
             }

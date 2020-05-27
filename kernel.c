@@ -5,8 +5,7 @@
 #include "include/graphics.h"
 #include "include/font.h"
 #include "include/asmfunc.h"
-  int offy=0;
-  int offx=0;
+ 
 void init_vga(){
     regs16_t vgaregister;
   vgaregister.ax=0x0013;
@@ -18,7 +17,7 @@ void kernel_main(void)
 {
   init_vga();
 
-  printstring("abcdefghiqrstuv");
+  printstring(0xc);
+  printstring("utopiaos version alpha");
 }
-
-
+ asm(".section .rodata");

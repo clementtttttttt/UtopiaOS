@@ -1,4 +1,7 @@
 	.file	"kernel.c"
+/APP
+	.section .rodata
+/NO_APP
 	.text
 	.align 16
 	.globl	drawtile
@@ -81,797 +84,803 @@ printstring:
 	.cfi_def_cfa_offset 16
 	.cfi_offset 3, -16
 	movl	16(%esp), %edx
-	movzbl	(%edx), %eax
-	testb	%al, %al
-	jne	.L141
+	cmpb	$0, (%edx)
+	jne	.L143
 	jmp	.L9
 	.align 16
+.L12:
+	cmpb	$98, %al
+	je	.L172
+.L17:
+	cmpb	$99, %al
+	je	.L173
+.L22:
+	cmpb	$100, %al
+	je	.L174
+.L27:
+	cmpb	$101, %al
+	je	.L175
+.L32:
+	cmpb	$102, %al
+	je	.L176
+.L37:
+	cmpb	$103, %al
+	je	.L177
+.L42:
+	cmpb	$104, %al
+	je	.L178
+.L47:
+	cmpb	$105, %al
+	je	.L179
+.L52:
+	cmpb	$106, %al
+	je	.L180
+.L57:
+	cmpb	$107, %al
+	je	.L181
+.L62:
+	cmpb	$108, %al
+	je	.L182
+.L67:
+	cmpb	$109, %al
+	je	.L183
+.L72:
+	cmpb	$110, %al
+	je	.L184
+.L77:
+	cmpb	$111, %al
+	je	.L185
+.L82:
+	cmpb	$112, %al
+	je	.L186
+.L87:
+	cmpb	$113, %al
+	je	.L187
+.L92:
+	cmpb	$114, %al
+	je	.L188
+.L97:
+	cmpb	$115, %al
+	je	.L189
+.L102:
+	cmpb	$116, %al
+	je	.L190
+.L107:
+	cmpb	$117, %al
+	je	.L191
+.L112:
+	cmpb	$118, %al
+	je	.L192
+.L117:
+	cmpb	$119, %al
+	je	.L193
+.L122:
+	cmpb	$120, %al
+	je	.L194
+.L127:
+	cmpb	$121, %al
+	je	.L195
+.L132:
+	cmpb	$122, %al
+	je	.L196
+.L137:
+	cmpb	$32, %al
+	jne	.L142
+	addl	$8, offsetx
+.L142:
+	addl	$1, %edx
+	cmpb	$0, (%edx)
+	je	.L9
+.L143:
+	cmpl	$320, offsetx
+	jne	.L11
+	addl	$9, offsety
+	movl	$0, offsetx
 .L11:
 	movzbl	(%edx), %eax
-	cmpb	$98, %al
-	je	.L173
-.L16:
-	cmpb	$99, %al
-	je	.L174
-.L21:
-	cmpb	$100, %al
-	je	.L175
-.L26:
-	cmpb	$101, %al
-	je	.L176
-.L31:
-	cmpb	$102, %al
-	je	.L177
-.L36:
-	cmpb	$103, %al
-	je	.L178
-.L41:
-	cmpb	$104, %al
-	je	.L179
-.L46:
-	cmpb	$105, %al
-	je	.L180
-.L51:
-	cmpb	$106, %al
-	je	.L181
-.L56:
-	cmpb	$107, %al
-	je	.L182
-.L61:
-	cmpb	$108, %al
-	je	.L183
-.L66:
-	cmpb	$109, %al
-	je	.L184
-.L71:
-	cmpb	$110, %al
-	je	.L185
-.L76:
-	cmpb	$111, %al
-	je	.L186
-.L81:
-	cmpb	$112, %al
-	je	.L187
-.L86:
-	cmpb	$113, %al
-	je	.L188
-.L91:
-	cmpb	$114, %al
-	je	.L189
-.L96:
-	cmpb	$115, %al
-	je	.L190
-.L101:
-	cmpb	$116, %al
-	je	.L191
-.L106:
-	cmpb	$117, %al
-	je	.L192
-.L111:
-	cmpb	$118, %al
-	je	.L193
-.L116:
-	cmpb	$119, %al
-	je	.L194
-.L121:
-	cmpb	$120, %al
-	je	.L195
-.L126:
-	cmpb	$121, %al
-	je	.L196
-.L131:
-	cmpb	$122, %al
-	je	.L197
-.L136:
-	addl	$1, %edx
-	movzbl	(%edx), %eax
-	testb	%al, %al
-	je	.L9
-.L141:
 	cmpb	$97, %al
-	jne	.L11
+	jne	.L12
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L12:
+.L13:
 	xorl	%eax, %eax
 	.align 16
-.L14:
+.L15:
 	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L13
+	jne	.L14
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L13:
+.L14:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L14
+	jne	.L15
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L12
+	jne	.L13
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
 	cmpb	$98, %al
-	jne	.L16
+	jne	.L17
+.L172:
+	movsbl	offsetx, %esi
+	movsbl	offsety, %edi
+	xorl	%ecx, %ecx
+	.align 16
+.L18:
+	xorl	%eax, %eax
+	.align 16
+.L20:
+	cmpb	$48, sysfont_b(%ecx,%eax,8)
+	jne	.L19
+	leal	(%edi,%eax), %ebx
+	leal	(%ebx,%ebx,4), %ebx
+	sall	$6, %ebx
+	movb	$15, 655360(%esi,%ebx)
+.L19:
+	addl	$1, %eax
+	cmpl	$8, %eax
+	jne	.L20
+	addl	$1, %ecx
+	addl	$1, %esi
+	cmpl	$8, %ecx
+	jne	.L18
+	addl	$8, offsetx
+	movzbl	(%edx), %eax
+	cmpb	$99, %al
+	jne	.L22
 .L173:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L17:
+.L23:
 	xorl	%eax, %eax
 	.align 16
-.L19:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L18
+.L25:
+	cmpb	$48, sysfont_c(%ecx,%eax,8)
+	jne	.L24
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L18:
+.L24:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L19
+	jne	.L25
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L17
+	jne	.L23
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$99, %al
-	jne	.L21
+	cmpb	$100, %al
+	jne	.L27
 .L174:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L22:
+.L28:
 	xorl	%eax, %eax
 	.align 16
-.L24:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L23
+.L30:
+	cmpb	$48, sysfont_d(%ecx,%eax,8)
+	jne	.L29
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L23:
+.L29:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L24
+	jne	.L30
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L22
+	jne	.L28
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$100, %al
-	jne	.L26
+	cmpb	$101, %al
+	jne	.L32
 .L175:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L27:
+.L33:
 	xorl	%eax, %eax
 	.align 16
-.L29:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L28
+.L35:
+	cmpb	$48, sysfont_e(%ecx,%eax,8)
+	jne	.L34
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L28:
+.L34:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L29
+	jne	.L35
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L27
+	jne	.L33
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$101, %al
-	jne	.L31
+	cmpb	$102, %al
+	jne	.L37
 .L176:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L32:
+.L38:
 	xorl	%eax, %eax
 	.align 16
-.L34:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L33
+.L40:
+	cmpb	$48, sysfont_f(%ecx,%eax,8)
+	jne	.L39
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L33:
+.L39:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L34
+	jne	.L40
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L32
+	jne	.L38
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$102, %al
-	jne	.L36
+	cmpb	$103, %al
+	jne	.L42
 .L177:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L37:
+.L43:
 	xorl	%eax, %eax
 	.align 16
-.L39:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L38
+.L45:
+	cmpb	$48, sysfont_g(%ecx,%eax,8)
+	jne	.L44
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L38:
+.L44:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L39
+	jne	.L45
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L37
+	jne	.L43
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$103, %al
-	jne	.L41
+	cmpb	$104, %al
+	jne	.L47
 .L178:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L42:
+.L48:
 	xorl	%eax, %eax
 	.align 16
-.L44:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L43
+.L50:
+	cmpb	$48, sysfont_h(%ecx,%eax,8)
+	jne	.L49
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L43:
+.L49:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L44
+	jne	.L50
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L42
+	jne	.L48
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$104, %al
-	jne	.L46
+	cmpb	$105, %al
+	jne	.L52
 .L179:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L47:
+.L53:
 	xorl	%eax, %eax
 	.align 16
-.L49:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L48
+.L55:
+	cmpb	$48, sysfont_i(%ecx,%eax,8)
+	jne	.L54
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L48:
+.L54:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L49
+	jne	.L55
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L47
+	jne	.L53
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$105, %al
-	jne	.L51
+	cmpb	$106, %al
+	jne	.L57
 .L180:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L52:
+.L58:
 	xorl	%eax, %eax
 	.align 16
-.L54:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L53
+.L60:
+	cmpb	$48, sysfont_j(%ecx,%eax,8)
+	jne	.L59
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L53:
+.L59:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L54
+	jne	.L60
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L52
+	jne	.L58
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$106, %al
-	jne	.L56
+	cmpb	$107, %al
+	jne	.L62
 .L181:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L57:
+.L63:
 	xorl	%eax, %eax
 	.align 16
-.L59:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L58
+.L65:
+	cmpb	$48, sysfont_k(%ecx,%eax,8)
+	jne	.L64
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L58:
+.L64:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L59
+	jne	.L65
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L57
+	jne	.L63
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$107, %al
-	jne	.L61
+	cmpb	$108, %al
+	jne	.L67
 .L182:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L62:
+.L68:
 	xorl	%eax, %eax
 	.align 16
-.L64:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L63
+.L70:
+	cmpb	$48, sysfont_l(%ecx,%eax,8)
+	jne	.L69
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L63:
+.L69:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L64
+	jne	.L70
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L62
+	jne	.L68
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$108, %al
-	jne	.L66
+	cmpb	$109, %al
+	jne	.L72
 .L183:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L67:
+.L73:
 	xorl	%eax, %eax
 	.align 16
-.L69:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L68
+.L75:
+	cmpb	$48, sysfont_m(%ecx,%eax,8)
+	jne	.L74
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L68:
+.L74:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L69
+	jne	.L75
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L67
+	jne	.L73
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$109, %al
-	jne	.L71
+	cmpb	$110, %al
+	jne	.L77
 .L184:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L72:
+.L78:
 	xorl	%eax, %eax
 	.align 16
-.L74:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L73
+.L80:
+	cmpb	$48, sysfont_n(%ecx,%eax,8)
+	jne	.L79
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L73:
+.L79:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L74
+	jne	.L80
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L72
+	jne	.L78
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$110, %al
-	jne	.L76
+	cmpb	$111, %al
+	jne	.L82
 .L185:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L77:
+.L83:
 	xorl	%eax, %eax
 	.align 16
-.L79:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L78
+.L85:
+	cmpb	$48, sysfont_o(%ecx,%eax,8)
+	jne	.L84
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L78:
+.L84:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L79
+	jne	.L85
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L77
+	jne	.L83
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$111, %al
-	jne	.L81
+	cmpb	$112, %al
+	jne	.L87
 .L186:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L82:
+.L88:
 	xorl	%eax, %eax
 	.align 16
-.L84:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L83
+.L90:
+	cmpb	$48, sysfont_p(%ecx,%eax,8)
+	jne	.L89
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L83:
+.L89:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L84
+	jne	.L90
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L82
+	jne	.L88
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$112, %al
-	jne	.L86
+	cmpb	$113, %al
+	jne	.L92
 .L187:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L87:
+.L93:
 	xorl	%eax, %eax
 	.align 16
-.L89:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L88
+.L95:
+	cmpb	$48, sysfont_q(%ecx,%eax,8)
+	jne	.L94
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L88:
+.L94:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L89
+	jne	.L95
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L87
+	jne	.L93
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$113, %al
-	jne	.L91
+	cmpb	$114, %al
+	jne	.L97
 .L188:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L92:
+.L98:
 	xorl	%eax, %eax
 	.align 16
-.L94:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L93
+.L100:
+	cmpb	$48, sysfont_r(%ecx,%eax,8)
+	jne	.L99
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L93:
+.L99:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L94
+	jne	.L100
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L92
+	jne	.L98
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$114, %al
-	jne	.L96
+	cmpb	$115, %al
+	jne	.L102
 .L189:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L97:
+.L103:
 	xorl	%eax, %eax
 	.align 16
-.L99:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L98
+.L105:
+	cmpb	$48, sysfont_s(%ecx,%eax,8)
+	jne	.L104
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L98:
+.L104:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L99
+	jne	.L105
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L97
+	jne	.L103
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$115, %al
-	jne	.L101
+	cmpb	$116, %al
+	jne	.L107
 .L190:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L102:
+.L108:
 	xorl	%eax, %eax
 	.align 16
-.L104:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L103
+.L110:
+	cmpb	$48, sysfont_t(%ecx,%eax,8)
+	jne	.L109
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L103:
+.L109:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L104
+	jne	.L110
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L102
+	jne	.L108
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$116, %al
-	jne	.L106
+	cmpb	$117, %al
+	jne	.L112
 .L191:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L107:
+.L113:
 	xorl	%eax, %eax
 	.align 16
-.L109:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L108
+.L115:
+	cmpb	$48, sysfont_u(%ecx,%eax,8)
+	jne	.L114
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L108:
+.L114:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L109
+	jne	.L115
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L107
+	jne	.L113
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$117, %al
-	jne	.L111
+	cmpb	$118, %al
+	jne	.L117
 .L192:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L112:
+.L118:
 	xorl	%eax, %eax
 	.align 16
-.L114:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L113
+.L120:
+	cmpb	$48, sysfont_v(%ecx,%eax,8)
+	jne	.L119
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L113:
+.L119:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L114
+	jne	.L120
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L112
+	jne	.L118
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$118, %al
-	jne	.L116
+	cmpb	$119, %al
+	jne	.L122
 .L193:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L117:
+.L123:
 	xorl	%eax, %eax
 	.align 16
-.L119:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L118
+.L125:
+	cmpb	$48, sysfont_w(%ecx,%eax,8)
+	jne	.L124
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L118:
+.L124:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L119
+	jne	.L125
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L117
+	jne	.L123
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$119, %al
-	jne	.L121
+	cmpb	$120, %al
+	jne	.L127
 .L194:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L122:
+.L128:
 	xorl	%eax, %eax
 	.align 16
-.L124:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L123
+.L130:
+	cmpb	$48, sysfont_x(%ecx,%eax,8)
+	jne	.L129
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L123:
+.L129:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L124
+	jne	.L130
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L122
+	jne	.L128
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$120, %al
-	jne	.L126
+	cmpb	$121, %al
+	jne	.L132
 .L195:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L127:
+.L133:
 	xorl	%eax, %eax
 	.align 16
-.L129:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L128
+.L135:
+	cmpb	$48, sysfont_y(%ecx,%eax,8)
+	jne	.L134
 	leal	(%edi,%eax), %ebx
 	leal	(%ebx,%ebx,4), %ebx
 	sall	$6, %ebx
 	movb	$15, 655360(%esi,%ebx)
-.L128:
+.L134:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L129
+	jne	.L135
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L127
+	jne	.L133
 	addl	$8, offsetx
 	movzbl	(%edx), %eax
-	cmpb	$121, %al
-	jne	.L131
+	cmpb	$122, %al
+	jne	.L137
 .L196:
 	movsbl	offsetx, %esi
 	movsbl	offsety, %edi
 	xorl	%ecx, %ecx
 	.align 16
-.L132:
-	xorl	%eax, %eax
-	.align 16
-.L134:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L133
-	leal	(%edi,%eax), %ebx
-	leal	(%ebx,%ebx,4), %ebx
-	sall	$6, %ebx
-	movb	$15, 655360(%esi,%ebx)
-.L133:
-	addl	$1, %eax
-	cmpl	$8, %eax
-	jne	.L134
-	addl	$1, %ecx
-	addl	$1, %esi
-	cmpl	$8, %ecx
-	jne	.L132
-	addl	$8, offsetx
-	movzbl	(%edx), %eax
-	cmpb	$122, %al
-	jne	.L136
-.L197:
-	movsbl	offsetx, %esi
-	movsbl	offsety, %edi
-	xorl	%ecx, %ecx
-	.align 16
-.L137:
-	xorl	%eax, %eax
-	.align 16
-.L139:
-	cmpb	$48, sysfont_a(%ecx,%eax,8)
-	jne	.L138
-	leal	(%edi,%eax), %ebx
-	leal	(%ebx,%ebx,4), %ebx
-	sall	$6, %ebx
-	movb	$15, 655360(%esi,%ebx)
 .L138:
+	xorl	%eax, %eax
+	.align 16
+.L140:
+	cmpb	$48, sysfont_z(%ecx,%eax,8)
+	jne	.L139
+	leal	(%edi,%eax), %ebx
+	leal	(%ebx,%ebx,4), %ebx
+	sall	$6, %ebx
+	movb	$15, 655360(%esi,%ebx)
+.L139:
 	addl	$1, %eax
 	cmpl	$8, %eax
-	jne	.L139
+	jne	.L140
 	addl	$1, %ecx
 	addl	$1, %esi
 	cmpl	$8, %ecx
-	jne	.L137
+	jne	.L138
 	addl	$8, offsetx
-	addl	$1, %edx
 	movzbl	(%edx), %eax
-	testb	%al, %al
-	jne	.L141
+	jmp	.L137
+	.align 16
 .L9:
 	popl	%ebx
 	.cfi_restore 3
@@ -910,7 +919,7 @@ init_vga:
 	.size	init_vga, .-init_vga
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
-	.string	"abcdefghiqrstuv"
+	.string	"utopiaos version alpha"
 	.text
 	.align 16
 	.globl	kernel_main
@@ -928,6 +937,8 @@ kernel_main:
 	pushl	$16
 	.cfi_def_cfa_offset 64
 	call	int32
+	movl	$12, (%esp)
+	call	printstring
 	movl	$.LC0, (%esp)
 	call	printstring
 	addl	$60, %esp
@@ -936,31 +947,6 @@ kernel_main:
 	.cfi_endproc
 .LFE3:
 	.size	kernel_main, .-kernel_main
-	.globl	offx
-	.section	.bss
-	.align 4
-	.type	offx, @object
-	.size	offx, 4
-offx:
-	.zero	4
-	.globl	offy
-	.align 4
-	.type	offy, @object
-	.size	offy, 4
-offy:
-	.zero	4
-	.globl	offsety
-	.align 4
-	.type	offsety, @object
-	.size	offsety, 4
-offsety:
-	.zero	4
-	.globl	offsetx
-	.align 4
-	.type	offsetx, @object
-	.size	offsetx, 4
-offsetx:
-	.zero	4
 	.globl	sysfont_z
 	.data
 	.align 32
@@ -1300,4 +1286,17 @@ sysfont_a:
 	.byte	0x30,0x2e,0x2e,0x2e,0x2e,0x30,0x2e,0x2e
 	.byte	0x30,0x2e,0x2e,0x2e,0x2e,0x30,0x2e,0x2e
 	.byte	0x30,0x2e,0x2e,0x2e,0x2e,0x30,0x2e,0x2e
+	.globl	offsety
+	.section	.bss
+	.align 4
+	.type	offsety, @object
+	.size	offsety, 4
+offsety:
+	.zero	4
+	.globl	offsetx
+	.align 4
+	.type	offsetx, @object
+	.size	offsetx, 4
+offsetx:
+	.zero	4
 	.ident	"GCC: (GNU) 7.1.0"

@@ -1,5 +1,8 @@
  /* font name: utopia,if you want it just use it i dont care*/
- char sysfont_a[8][8]={
+ int offsetx=0;
+int offsety=0;
+
+char sysfont_a[8][8]={
     ".0000...",
     "0....0..",
     "0....0..",
@@ -236,10 +239,13 @@ char sysfont_z[8][8]={
     "..0.....",
     ".0......",
     "000000.."};
-int offsetx=0;
-int offsety=0;
 void printstring(unsigned char *s){
     for(; *s!=0x00;s++){
+               if (offsetx==320){
+            offsetx=0;
+            offsety=offsety+9;
+    
+        }
         if(*s=='a'){
             drawtile(sysfont_a,15,offsetx,offsety);
             offsetx=offsetx+8;
@@ -320,5 +326,9 @@ void printstring(unsigned char *s){
             drawtile(sysfont_z,15,offsetx,offsety);
             offsetx=offsetx+8;
         }
-    }
+        if (*s==0x20){
+            offsetx=offsetx+8;
+        }
+ 
+        }
 }
