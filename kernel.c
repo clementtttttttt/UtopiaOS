@@ -3,20 +3,19 @@
 #include <stdint.h>
 #include "include/rmode.h"
 #include "include/graphics.h"
-
+#include "include/keyboard.h"
 #include "include/asmfunc.h"
  #include "include/font.h"
+#include "include/pic.h"
 int *resolution_ptr;
   
-
+void init_vga();
 void init_vbe(){
     regs16_t vberegister;
   vberegister.bx=0x4107;
   vberegister.ax=0x4f02;
   int32(0x10,&vberegister);
-  if (vberegister.ax!=0x004f){
-    return;
-  }else
+  
   
   *resolution_ptr=1280;
 }
@@ -38,10 +37,9 @@ void kernel_main(void)
   printstring("Kernel sucessfully loaded.");
   newline();
   printstring("newline test.");
-  
+  newline();
+  printfont ("testing font");
 
 
-
-  
 }
 

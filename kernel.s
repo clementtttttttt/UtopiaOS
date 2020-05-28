@@ -127,21 +127,82 @@ putfont:
 .LFE1:
 	.size	putfont, .-putfont
 	.align 16
-	.globl	printstring
-	.type	printstring, @function
-printstring:
+	.globl	putfontrev
+	.type	putfontrev, @function
+putfontrev:
 .LFB2:
 	.cfi_startproc
 	pushl	%ebx
 	.cfi_def_cfa_offset 8
 	.cfi_offset 3, -8
 	movl	8(%esp), %ebx
-	cmpb	$0, (%ebx)
-	je	.L42
-	movl	x, %edx
-	jmp	.L46
+	xorl	%edx, %edx
 	.align 16
+.L51:
+	movl	y, %eax
+	movl	x, %ecx
+	addl	%edx, %eax
+	imull	12272, %eax
+	leal	655360(%eax,%ecx), %ecx
+	movzbl	(%ebx,%edx), %eax
+	testb	%al, %al
+	jns	.L43
+	movb	$15, (%ecx)
+.L43:
+	testb	$64, %al
+	je	.L44
+	movb	$15, 1(%ecx)
+.L44:
+	testb	$32, %al
+	je	.L45
+	movb	$15, 2(%ecx)
 .L45:
+	testb	$16, %al
+	je	.L46
+	movb	$15, 3(%ecx)
+.L46:
+	testb	$8, %al
+	je	.L47
+	movb	$15, 4(%ecx)
+.L47:
+	testb	$4, %al
+	je	.L48
+	movb	$15, 5(%ecx)
+.L48:
+	testb	$2, %al
+	je	.L49
+	movb	$15, 6(%ecx)
+.L49:
+	testb	$1, %al
+	je	.L50
+	movb	$15, 7(%ecx)
+.L50:
+	addl	$1, %edx
+	cmpl	$14, %edx
+	jne	.L51
+	popl	%ebx
+	.cfi_restore 3
+	.cfi_def_cfa_offset 4
+	ret
+	.cfi_endproc
+.LFE2:
+	.size	putfontrev, .-putfontrev
+	.align 16
+	.globl	printstring
+	.type	printstring, @function
+printstring:
+.LFB3:
+	.cfi_startproc
+	pushl	%ebx
+	.cfi_def_cfa_offset 8
+	.cfi_offset 3, -8
+	movl	8(%esp), %ebx
+	cmpb	$0, (%ebx)
+	je	.L75
+	movl	x, %edx
+	jmp	.L79
+	.align 16
+.L78:
 	sall	$4, %eax
 	addl	$1, %ebx
 	addl	$iso_font, %eax
@@ -154,15 +215,15 @@ printstring:
 	.cfi_def_cfa_offset 8
 	movl	%edx, x
 	cmpb	$0, (%ebx)
-	je	.L42
-.L46:
+	je	.L75
+.L79:
 	cmpl	$320, %edx
-	jne	.L44
+	jne	.L77
 	addl	$10, y
-.L44:
+.L77:
 	movzbl	(%ebx), %eax
 	cmpb	$8, %al
-	jne	.L45
+	jne	.L78
 	pushl	$iso_font
 	.cfi_def_cfa_offset 12
 	subl	$8, %edx
@@ -172,33 +233,89 @@ printstring:
 	movzbl	(%ebx), %eax
 	popl	%edx
 	.cfi_def_cfa_offset 8
-	jmp	.L45
+	jmp	.L78
 	.align 16
-.L42:
+.L75:
 	popl	%ebx
 	.cfi_restore 3
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE2:
+.LFE3:
 	.size	printstring, .-printstring
 	.align 16
 	.globl	newline
 	.type	newline, @function
 newline:
-.LFB3:
+.LFB4:
 	.cfi_startproc
 	movl	$0, x
 	addl	$16, y
 	ret
 	.cfi_endproc
-.LFE3:
+.LFE4:
 	.size	newline, .-newline
+	.align 16
+	.globl	printfont
+	.type	printfont, @function
+printfont:
+.LFB5:
+	.cfi_startproc
+	pushl	%ebx
+	.cfi_def_cfa_offset 8
+	.cfi_offset 3, -8
+	movl	8(%esp), %ebx
+	cmpb	$0, (%ebx)
+	je	.L83
+	movl	x, %edx
+	jmp	.L87
+	.align 16
+.L86:
+	sall	$4, %eax
+	addl	$1, %ebx
+	addl	$font, %eax
+	pushl	%eax
+	.cfi_def_cfa_offset 12
+	call	putfontrev
+	movl	x, %eax
+	leal	8(%eax), %edx
+	popl	%eax
+	.cfi_def_cfa_offset 8
+	movl	%edx, x
+	cmpb	$0, (%ebx)
+	je	.L83
+.L87:
+	cmpl	$320, %edx
+	jne	.L85
+	addl	$10, y
+.L85:
+	movzbl	(%ebx), %eax
+	cmpb	$8, %al
+	jne	.L86
+	pushl	$font
+	.cfi_def_cfa_offset 12
+	subl	$8, %edx
+	subb	$1, screencounter
+	movl	%edx, x
+	call	putfontrev
+	movzbl	(%ebx), %eax
+	popl	%edx
+	.cfi_def_cfa_offset 8
+	jmp	.L86
+	.align 16
+.L83:
+	popl	%ebx
+	.cfi_restore 3
+	.cfi_def_cfa_offset 4
+	ret
+	.cfi_endproc
+.LFE5:
+	.size	printfont, .-printfont
 	.align 16
 	.globl	init_vbe
 	.type	init_vbe, @function
 init_vbe:
-.LFB4:
+.LFB6:
 	.cfi_startproc
 	subl	$52, %esp
 	.cfi_def_cfa_offset 56
@@ -212,30 +329,19 @@ init_vbe:
 	pushl	$16
 	.cfi_def_cfa_offset 64
 	call	int32
-	addl	$16, %esp
-	.cfi_def_cfa_offset 48
-	cmpw	$79, 20(%esp)
-	je	.L54
-	addl	$44, %esp
-	.cfi_remember_state
-	.cfi_def_cfa_offset 4
-	ret
-	.align 16
-.L54:
-	.cfi_restore_state
 	movl	resolution_ptr, %eax
 	movl	$1280, (%eax)
-	addl	$44, %esp
+	addl	$60, %esp
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE4:
+.LFE6:
 	.size	init_vbe, .-init_vbe
 	.align 16
 	.globl	init_vga
 	.type	init_vga, @function
 init_vga:
-.LFB5:
+.LFB7:
 	.cfi_startproc
 	subl	$52, %esp
 	.cfi_def_cfa_offset 56
@@ -253,44 +359,52 @@ init_vga:
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE5:
+.LFE7:
 	.size	init_vga, .-init_vga
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
 	.string	"Kernel sucessfully loaded."
 .LC1:
 	.string	"newline test."
+.LC2:
+	.string	"testing font"
 	.text
 	.align 16
 	.globl	kernel_main
 	.type	kernel_main, @function
 kernel_main:
-.LFB6:
+.LFB8:
 	.cfi_startproc
 	subl	$52, %esp
 	.cfi_def_cfa_offset 56
-	movl	$19, %eax
-	movl	$12272, resolution_ptr
-	movw	%ax, 28(%esp)
+	movl	$16647, %eax
+	movl	$20226, %edx
+	movw	%ax, 22(%esp)
 	leal	14(%esp), %eax
+	movw	%dx, 28(%esp)
+	movl	$12272, resolution_ptr
 	pushl	%eax
 	.cfi_def_cfa_offset 60
 	pushl	$16
 	.cfi_def_cfa_offset 64
 	call	int32
 	movl	resolution_ptr, %eax
-	movl	$320, (%eax)
+	movl	$1280, (%eax)
 	movl	$.LC0, (%esp)
 	call	printstring
 	movl	$.LC1, (%esp)
 	movl	$0, x
 	addl	$16, y
 	call	printstring
+	movl	$.LC2, (%esp)
+	movl	$0, x
+	addl	$16, y
+	call	printfont
 	addl	$60, %esp
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE6:
+.LFE8:
 	.size	kernel_main, .-kernel_main
 	.comm	resolution_ptr,4,4
 	.comm	screencounter,1,1

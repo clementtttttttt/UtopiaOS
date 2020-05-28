@@ -6,7 +6,8 @@
 	nasm -felf32 include/asmfunc.asm -o asmfunc.o
 	./makefont font.txt font.bin
 	./bin2obj font.bin font.obj font
-	i686-elf-gcc -T linker.ld -o myos.bin -ffreestanding -O2 -nostdlib boot.o asmfunc.o kernel.o rmode.o font.obj -lgcc
+	nasm -felf32 include/keyboard.asm -o keyboard.o
+	i686-elf-gcc -T linker.ld -o myos.bin -ffreestanding -O2 -nostdlib boot.o asmfunc.o keyboard.o kernel.o rmode.o font.obj -lgcc
 	grub-file --is-x86-multiboot myos.bin
 	mkdir -p isodir/boot/grub
 	cp myos.bin isodir/boot/myos.bin
