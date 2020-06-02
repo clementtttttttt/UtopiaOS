@@ -1,0 +1,2 @@
+ata0-slave: type=cdrom, path="~Desktop/os/myos.iso", status=inserted
+boot:cdrom
