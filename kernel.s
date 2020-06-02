@@ -75,7 +75,7 @@ outb:
 	movl	8(%esp), %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, %dx
+	out %al, %dx
 /  0 "" 2
 /NO_APP
 	ret
@@ -103,7 +103,7 @@ PIC_remap:
 	movl	$17, %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $32
+	out %al, $32
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -111,7 +111,7 @@ PIC_remap:
 	2:
 /  0 "" 2
 /  23 "include/keyboard.h" 1
-	outb %al, $160
+	out %al, $160
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -122,7 +122,7 @@ PIC_remap:
 	movl	4(%esp), %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $33
+	out %al, $33
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -133,7 +133,7 @@ PIC_remap:
 	movl	8(%esp), %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $161
+	out %al, $161
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -144,7 +144,7 @@ PIC_remap:
 	movl	$4, %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $33
+	out %al, $33
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -155,7 +155,7 @@ PIC_remap:
 	movl	$2, %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $161
+	out %al, $161
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -166,7 +166,7 @@ PIC_remap:
 	movl	$1, %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $33
+	out %al, $33
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -174,7 +174,7 @@ PIC_remap:
 	2:
 /  0 "" 2
 /  23 "include/keyboard.h" 1
-	outb %al, $161
+	out %al, $161
 /  0 "" 2
 /  38 "include/keyboard.h" 1
 	jmp 1f
@@ -185,13 +185,13 @@ PIC_remap:
 	movl	%ecx, %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $33
+	out %al, $33
 /  0 "" 2
 /NO_APP
 	movl	%edx, %eax
 /APP
 /  23 "include/keyboard.h" 1
-	outb %al, $161
+	out %al, $161
 /  0 "" 2
 /NO_APP
 	ret
@@ -514,26 +514,14 @@ init_vga:
 kernel_main:
 .LFB12:
 	.cfi_startproc
-	subl	$44, %esp
-	.cfi_def_cfa_offset 48
-	pushl	$28
-	.cfi_def_cfa_offset 52
-	pushl	$20
+	subl	$52, %esp
 	.cfi_def_cfa_offset 56
-	call	PIC_remap
-	popl	%eax
-	.cfi_def_cfa_offset 52
-	popl	%edx
-	.cfi_def_cfa_offset 48
-	movl	$12272, resolution_ptr
-	call	c_sti
-	movl	$16647, %ecx
-	movl	$20226, %eax
-	subl	$8, %esp
-	.cfi_def_cfa_offset 56
-	movw	%cx, 22(%esp)
-	movw	%ax, 28(%esp)
+	movl	$16647, %eax
+	movl	$20226, %edx
+	movw	%ax, 22(%esp)
 	leal	14(%esp), %eax
+	movw	%dx, 28(%esp)
+	movl	$12272, resolution_ptr
 	pushl	%eax
 	.cfi_def_cfa_offset 60
 	pushl	$16
@@ -551,7 +539,18 @@ kernel_main:
 	movl	$0, x
 	addl	$16, y
 	call	printfont
-	addl	$60, %esp
+	addl	$16, %esp
+	.cfi_def_cfa_offset 48
+	.align 16
+.L97:
+/APP
+/  30 "include/keyboard.h" 1
+	inb $100,%al
+/  0 "" 2
+/NO_APP
+	testb	%al, %al
+	jne	.L97
+	addl	$44, %esp
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc

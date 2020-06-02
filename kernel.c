@@ -27,15 +27,17 @@ void init_vga(){
 
 void kernel_main(void) 
 {
-  PIC_remap (20, 28);
+  unsigned char out;
   resolution_ptr=(int*)0x2ff0;
-  c_sti();
+
   init_vbe ();
     printstring("Kernel sucessfully loaded.");
   newline();
   printstring("newline test.");
   newline();
   printfont ("testing font");
-
+  while(inb(0x64)!=0){
+  }
+ 
 }
 
