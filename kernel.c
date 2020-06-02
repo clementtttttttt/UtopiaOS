@@ -6,7 +6,6 @@
 #include "include/keyboard.h"
 #include "include/asmfunc.h"
  #include "include/font.h"
-#include "include/pic.h"
 int *resolution_ptr;
   
 void init_vga();
@@ -26,20 +25,17 @@ void init_vga(){
   *resolution_ptr=320;
 }
 
-
 void kernel_main(void) 
 {
+  PIC_remap (20, 28);
   resolution_ptr=(int*)0x2ff0;
-
+  c_sti();
   init_vbe ();
-
-
-  printstring("Kernel sucessfully loaded.");
+    printstring("Kernel sucessfully loaded.");
   newline();
   printstring("newline test.");
   newline();
   printfont ("testing font");
-
 
 }
 

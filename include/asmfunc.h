@@ -1,1 +1,2 @@
-void asm_out(int io_port,int io_data);
+void asm_out8(int io_port,char io_data);
+void c_sti();

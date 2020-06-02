@@ -287,7 +287,7 @@ void putfontrev(char *e){
     int i;
     char *z,s;
     for(i=0;i<14;i++){
-        z=0xa0000+(y+i)**resolution+x;
+        z=(char*)0xa0000+(y+i)**resolution+x;
         s=e[i];
         
 		if ((s & 0x80) != 0) { z[0] = 15; }
