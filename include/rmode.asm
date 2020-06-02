@@ -76,7 +76,7 @@ section .text
 		pop  fs                                ; load fs from 16bit stack
 		pop  es                                ; load es from 16bit stack
 		pop  ds                                ; load ds from 16bit stack
-		sti                                    ; enable interrupts
+		                                ; enable interrupts
 		db 0xCD                                ; opcode of INT instruction with immediate byte
 	ib: db 0x00
 		cli                                    ; disable interrupts
