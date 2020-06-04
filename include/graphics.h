@@ -31,3 +31,4 @@ void drawtile(char input[8][8],char colorcode,char offx,char offy){
 	VGA_COLOR_LIGHT_BROWN = 14,
 	VGA_COLOR_WHITE = 15,
 };
+

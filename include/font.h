@@ -1,7 +1,6 @@
-int x=0;
-int y=0;
+#include <stdint.h>
 /* borrowed from darwin.*/
-unsigned char iso_font[256*16] = {
+static unsigned char iso_font[256*16] = {
 /*   0 */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 /*   1 */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 /*   2 */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -255,19 +254,63 @@ unsigned char iso_font[256*16] = {
 /* 250 */ 0x00,0x30,0x18,0x0c,0x00,0x63,0x63,0x63,0x63,0x63,0x73,0x6e,0x00,0x00,0x00,0x00,
 /* 251 */ 0x00,0x08,0x1c,0x36,0x00,0x63,0x63,0x63,0x63,0x63,0x73,0x6e,0x00,0x00,0x00,0x00,
 /* 252 */ 0x00,0x00,0x36,0x36,0x00,0x63,0x63,0x63,0x63,0x63,0x73,0x6e,0x00,0x00,0x00,0x00,
-/* 253 */ 0x00,0x30,0x18,0x0c,0x00,0x63,0x63,0x36,0x36,0x1c,0x1c,0x0c,0x0c,0x06,0x03,0x00,
+/* 253 */ 0x00,0x30,0x18,0x0c, 0x00,0x63,0x63,0x36,0x36,0x1c,0x1c,0x0c,0x0c,0x06,0x03,0x00,
 /* 254 */ 0x00,0x00,0x0f,0x06,0x06,0x3e,0x66,0x66,0x66,0x66,0x66,0x3e,0x06,0x06,0x0f,0x00,
 /* 255 */ 0x00,0x00,0x36,0x36,0x00,0x63,0x63,0x36,0x36,0x1c,0x1c,0x0c,0x0c,0x06,0x03,0x00
 };
-char screenchars[1000];
-char screencounter;
-void putfont(char *e){
-    int *resolution;
+unsigned int x=0;
+unsigned int y=0;
+
+struct vbe_mode_info_structure {
+	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
+	uint8_t window_a;			// deprecated
+	uint8_t window_b;			// deprecated
+	uint16_t granularity;		// deprecated; used while calculating bank numbers
+	uint16_t window_size;
+	uint16_t segment_a;
+	uint16_t segment_b;
+	uint32_t win_func_ptr;		// deprecated; used to switch banks from protected mode without returning to real mode
+	uint16_t pitch;			// number of bytes per horizontal line
+	uint16_t width;			// width in pixels
+	uint16_t height;			// height in pixels
+	uint8_t w_char;			// unused...
+	uint8_t y_char;			// ...
+	uint8_t planes;
+	uint8_t bpp;			// bits per pixel in this mode
+	uint8_t banks;			// deprecated; total number of banks in this mode
+	uint8_t memory_model;
+	uint8_t bank_size;		// deprecated; size of a bank, almost always 64 KB but may be 16 KB...
+	uint8_t image_pages;
+	uint8_t reserved0;
+ 
+	uint8_t red_mask;
+	uint8_t red_position;
+	uint8_t green_mask;
+	uint8_t green_position;
+	uint8_t blue_mask;
+	uint8_t blue_position;
+	uint8_t reserved_mask;
+	uint8_t reserved_position;
+	uint8_t direct_color_attributes;
+ 
+	uint32_t framebuffer;		// physical address of the linear frame buffer; write here to draw to the screen
+	uint32_t off_screen_mem_off;
+	uint16_t off_screen_mem_size;	// size of memory in the framebuffer but not being displayed on the screen
+	uint8_t reserved1[206];
+} __attribute__ ((packed));
+
+struct vbe_mode_info_structure *adr=0x3fe0;
+void putfont(unsigned char *e){
+    int framebuffer=adr->framebuffer;
+    unsigned int *resolution;
     resolution=(int*)0x2ff0;
-    int i;
-    char *z,s;
-    for(i=0;i<18;i++){
-        z=0xa0000+(y+i)**resolution+x;
+    unsigned char i;
+    unsigned char *z,s; 
+
+
+    
+    for(i=0;i<17;i++){
+        z=(char*)framebuffer+(y+i)*1280+x;
         s=e[i];
         
 		if ((s & 0x01) != 0) { z[0] = 15; }
@@ -281,39 +324,19 @@ void putfont(char *e){
     }
 }
 
-void putfontrev(char *e){
-    int *resolution;
-    resolution=(int*)0x2ff0;
-    int i;
-    char *z,s;
-    for(i=0;i<14;i++){
-        z=(char*)0xa0000+(y+i)**resolution+x;
-        s=e[i];
-        
-		if ((s & 0x80) != 0) { z[0] = 15; }
-		if ((s & 0x40) != 0) { z[1] = 15; }
-		if ((s & 0x20) != 0) { z[2] = 15; }
-		if ((s & 0x10) != 0) { z[3] = 15; }
-		if ((s & 0x08) != 0) { z[4] = 15; }
-		if ((s & 0x04) != 0) { z[5] = 15; }
-		if ((s & 0x02) != 0) { z[6] = 15; }
-		if ((s & 0x01) != 0) { z[7] = 15; }
-    }
-}
+
 void printstring(unsigned char *d){
-        extern char font[4096];
         for(;*d!=0x00;d++){
-            if(x==320){
-                y+=10;
+            if(x==1280){
+                y+=16;
             }
-            if(*d==0x8){
-                x-=8;
-                screencounter-=1;
-                putfont(iso_font+0x0*16);
+            if(x==1280&&y==1024){
+             clearscreen();   
             }
+           
             
             putfont(iso_font+*d*16);
-                               x+=8;
+                    x+=8;
             
             
         }
@@ -324,23 +347,19 @@ void newline(){
     x=0;
     y+=16;
 }
-    void printfont(unsigned char *d){
-        extern char font[4096];
-        for(;*d!=0x00;d++){
-            if(x==320){
-                y+=10;
+void clearscreen(){
+        int framebuffer=adr->framebuffer;
+
+    int *resolution;
+    resolution=(int*)0x2ff0;
+    char *vramaddr;
+        for(int x=0;x<1280;x++){
+            for(int y=0;y<1024;y++){
+            
+                vramaddr=(char*)framebuffer+(x)+(y)**resolution;
+                    *vramaddr=0;
+
             }
-            if(*d==0x8){
-                x-=8;
-                screencounter-=1;
-                putfontrev(font+0x0*16);
-            }
-            
-            putfontrev(font+*d*16);
-                               x+=8;
-            
-            
         }
 
-return;        
-}
+    }

@@ -1,6 +1,6 @@
  
 [bits 32]
-
+global hang
 global int32, _int32
 
 struc regs16_t
@@ -29,6 +29,9 @@ endstruc
 %define STACK16                            (INT32_BASE - regs16_t_size)
 
 section .text
+    hang:
+        hlt
+        jmp hang
 	int32: use32                             ; by Napalm
 	_int32:
 		cli                                    ; disable interrupts
@@ -112,7 +115,7 @@ section .text
 		cld                                    ; clear direction flag (so we copy forward)
 		rep  movsb                             ; do the actual copy (16bit stack to 32bit stack)
 		popa                                   ; restore registers
-		sti                                    ; enable interrupts
+		                                    ; enable interrupts
 		ret                                    ; return to caller
 		
 	resetpic:                                ; reset's 8259 master and slave pic vectors
