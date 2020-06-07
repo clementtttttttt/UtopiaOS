@@ -8,6 +8,7 @@
  #include "include/font.h"
 #include <stdarg.h>
 int *resolution_ptr;
+extern void load_gdt();
 void init_vbe(){
     regs16_t vberegister;
     regs16_t vberegs2;
@@ -25,7 +26,7 @@ void init_vbe(){
 void kernel_main(void) 
 {
   
-   
+    
   unsigned char out;
   resolution_ptr=(int*)0x2ff0;
   init_vbe ();

@@ -2,6 +2,9 @@
 #define CHECK_BIT(var,pos) (((var)>>(pos)) & 1)
 
 #define CHECK_BIT0(var,pos) (((var)>>(pos)) & 0)
+void printstring(unsigned char *d);
+void newline();
+
 void outb( unsigned short port, unsigned char val )
 {
    asm volatile("out %0, %1" : : "a"(val), "Nd"(port) );
@@ -49,17 +52,39 @@ void waitforkeyout(){
     }
 
 }
+void out2keyboard(unsigned char value){
+        waitforkey();
+
+    outb(0x64,0xd2);
+    waitforkeyout();
+    outb(0x60,value);
+}
+char temp;
+void hang();
 void initkeyboard(){
+    newline();
+    printstring("Enabling A20 just incase...");
+    waitforkeyout();
+    outb(0x64,0xD0);
+    waitforkeyout();
+    temp=inb(0x60);
+    temp |= 1 << 1;
+    waitforkey();
+    outb(0x64,0xD1);
+    waitforkeyout();
+    outb(0x60,temp);
+    printstring("A20 enabled.");
     newline();
     printstring("[PS/2 INIT ROUTINE]");
     newline();
     newline();
     waitforkey();
 
-        printstring("Testing PS/2 controller...");
 
     outb(0x64,0xaa);
     waitforkeyout();
+            printstring("Testing PS/2 controller...");
+
     if(inb(0x64)==0x5C){
         printstring("FAIL");
         newline();
@@ -67,6 +92,10 @@ void initkeyboard(){
         hang();
     }
     else printstring("OK");
+    newline();
+    printstring("Detecting PS/2 Port #1 device type...");
+    newline();
+    out2keyboard(0xf5);
 }
 
           

@@ -74,7 +74,7 @@ outb:
 	movl	4(%esp), %edx
 	movl	8(%esp), %eax
 /APP
-/  7 "include/keyboard.h" 1
+/  10 "include/keyboard.h" 1
 	out %al, %dx
 /  0 "" 2
 /NO_APP
@@ -90,7 +90,7 @@ inb:
 	.cfi_startproc
 	movl	4(%esp), %edx
 /APP
-/  14 "include/keyboard.h" 1
+/  17 "include/keyboard.h" 1
 	inb %dx,%al
 /  0 "" 2
 /NO_APP
@@ -102,7 +102,7 @@ inb:
 	.globl	putfont
 	.type	putfont, @function
 putfont:
-.LFB7:
+.LFB8:
 	.cfi_startproc
 	movl	adr, %eax
 	pushl	%esi
@@ -167,13 +167,58 @@ putfont:
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE7:
+.LFE8:
 	.size	putfont, .-putfont
+	.align 16
+	.globl	newline
+	.type	newline, @function
+newline:
+.LFB9:
+	.cfi_startproc
+	movl	$0, x
+	addl	$16, y
+	ret
+	.cfi_endproc
+.LFE9:
+	.size	newline, .-newline
+	.align 16
+	.globl	clearscreen
+	.type	clearscreen, @function
+clearscreen:
+.LFB10:
+	.cfi_startproc
+	movl	adr, %eax
+	pushl	%ebx
+	.cfi_def_cfa_offset 8
+	.cfi_offset 3, -8
+	movl	40(%eax), %ecx
+	leal	1280(%ecx), %ebx
+	.align 16
+.L46:
+	xorl	%eax, %eax
+	.align 16
+.L47:
+	movl	12272, %edx
+	imull	%eax, %edx
+	addl	$1, %eax
+	cmpl	$1024, %eax
+	movb	$0, (%edx,%ecx)
+	jne	.L47
+	addl	$1, %ecx
+	cmpl	%ecx, %ebx
+	jne	.L46
+	popl	%ebx
+	.cfi_restore 3
+	.cfi_def_cfa_offset 4
+	ret
+	.cfi_endproc
+.LFE10:
+	.size	clearscreen, .-clearscreen
 	.align 16
 	.globl	printstring
 	.type	printstring, @function
 printstring:
-.LFB8:
+.LFB11:
 	.cfi_startproc
 	pushl	%esi
 	.cfi_def_cfa_offset 8
@@ -183,10 +228,10 @@ printstring:
 	.cfi_offset 3, -12
 	movl	12(%esp), %esi
 	cmpb	$0, (%esi)
-	je	.L44
+	je	.L51
 	movl	x, %eax
-	jmp	.L49
-.L46:
+	jmp	.L56
+.L53:
 	movzbl	(%esi), %eax
 	addl	$1, %esi
 	sall	$4, %eax
@@ -200,34 +245,34 @@ printstring:
 	addl	$8, %eax
 	movl	%eax, x
 	cmpb	$0, (%esi)
-	je	.L44
-.L49:
+	je	.L51
+.L56:
 	cmpl	$1280, %eax
-	jne	.L46
+	jne	.L53
 	movl	y, %eax
 	addl	$16, %eax
 	cmpl	$1024, %eax
 	movl	%eax, y
-	jne	.L46
+	jne	.L53
 	movl	adr, %eax
 	movl	40(%eax), %ecx
 	leal	1280(%ecx), %ebx
 	.align 16
-.L47:
+.L54:
 	xorl	%eax, %eax
 	.align 16
-.L48:
+.L55:
 	movl	12272, %edx
 	imull	%eax, %edx
 	addl	$1, %eax
 	cmpl	$1024, %eax
 	movb	$0, (%edx,%ecx)
-	jne	.L48
+	jne	.L55
 	addl	$1, %ecx
 	cmpl	%ecx, %ebx
-	jne	.L47
-	jmp	.L46
-.L44:
+	jne	.L54
+	jmp	.L53
+.L51:
 	popl	%ebx
 	.cfi_restore 3
 	.cfi_def_cfa_offset 8
@@ -236,7 +281,7 @@ printstring:
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE8:
+.LFE11:
 	.size	printstring, .-printstring
 	.section	.rodata.str1.4,"aMS",@progbits,1
 	.align 4
@@ -258,14 +303,14 @@ waitforkey:
 	popl	%edx
 	.cfi_def_cfa_offset 4
 	.align 16
-.L54:
+.L61:
 /APP
-/  14 "include/keyboard.h" 1
+/  17 "include/keyboard.h" 1
 	inb $100,%al
 /  0 "" 2
 /NO_APP
 	testb	$2, %al
-	jne	.L54
+	jne	.L61
 	pushl	$.LC1
 	.cfi_def_cfa_offset 8
 	call	printstring
@@ -294,7 +339,7 @@ waitforkeyout:
 	movl	$0, x
 	call	printstring
 /APP
-/  14 "include/keyboard.h" 1
+/  17 "include/keyboard.h" 1
 	inb $100,%al
 /  0 "" 2
 /NO_APP
@@ -311,23 +356,61 @@ waitforkeyout:
 	.cfi_endproc
 .LFE5:
 	.size	waitforkeyout, .-waitforkeyout
+	.align 16
+	.globl	out2keyboard
+	.type	out2keyboard, @function
+out2keyboard:
+.LFB6:
+	.cfi_startproc
+	pushl	%ebx
+	.cfi_def_cfa_offset 8
+	.cfi_offset 3, -8
+	movl	8(%esp), %ebx
+	call	waitforkey
+	movl	$-46, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $100
+/  0 "" 2
+/NO_APP
+	call	waitforkeyout
+	movl	%ebx, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $96
+/  0 "" 2
+/NO_APP
+	popl	%ebx
+	.cfi_restore 3
+	.cfi_def_cfa_offset 4
+	ret
+	.cfi_endproc
+.LFE6:
+	.size	out2keyboard, .-out2keyboard
 	.section	.rodata.str1.1
 .LC3:
-	.string	"[PS/2 INIT ROUTINE]"
+	.string	"Enabling A20 just incase..."
 .LC4:
-	.string	"Testing PS/2 controller..."
+	.string	"A20 enabled."
 .LC5:
+	.string	"[PS/2 INIT ROUTINE]"
+.LC6:
+	.string	"Testing PS/2 controller..."
+.LC7:
 	.string	"FAIL"
 	.section	.rodata.str1.4
 	.align 4
-.LC6:
+.LC8:
 	.string	"FATAL ERROR: PS/2 controller test failed"
+	.align 4
+.LC9:
+	.string	"Detecting PS/2 Port #1 device type..."
 	.text
 	.align 16
 	.globl	initkeyboard
 	.type	initkeyboard, @function
 initkeyboard:
-.LFB6:
+.LFB7:
 	.cfi_startproc
 	subl	$12, %esp
 	.cfi_def_cfa_offset 16
@@ -336,105 +419,124 @@ initkeyboard:
 	pushl	$.LC3
 	.cfi_def_cfa_offset 20
 	call	printstring
-	addl	$32, y
-	movl	$0, x
-	call	waitforkey
-	pushl	$.LC4
-	.cfi_def_cfa_offset 24
-	call	printstring
-	movl	$-86, %eax
+	call	waitforkeyout
+	movl	$-48, %eax
 /APP
-/  7 "include/keyboard.h" 1
+/  10 "include/keyboard.h" 1
 	out %al, $100
 /  0 "" 2
 /NO_APP
 	call	waitforkeyout
 /APP
-/  14 "include/keyboard.h" 1
+/  17 "include/keyboard.h" 1
+	inb $96,%al
+/  0 "" 2
+/NO_APP
+	orl	$2, %eax
+	movb	%al, temp
+	call	waitforkey
+	movl	$-47, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $100
+/  0 "" 2
+/NO_APP
+	call	waitforkeyout
+	movzbl	temp, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $96
+/  0 "" 2
+/NO_APP
+	pushl	$.LC4
+	.cfi_def_cfa_offset 24
+	call	printstring
+	pushl	$.LC5
+	.cfi_def_cfa_offset 28
+	addl	$16, y
+	movl	$0, x
+	call	printstring
+	addl	$32, y
+	movl	$0, x
+	call	waitforkey
+	movl	$-86, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $100
+/  0 "" 2
+/NO_APP
+	call	waitforkeyout
+	pushl	$.LC6
+	.cfi_def_cfa_offset 32
+	call	printstring
+/APP
+/  17 "include/keyboard.h" 1
 	inb $100,%al
 /  0 "" 2
 /NO_APP
-	cmpb	$92, %al
-	popl	%edx
-	.cfi_def_cfa_offset 20
-	popl	%ecx
+	addl	$16, %esp
 	.cfi_def_cfa_offset 16
-	je	.L60
+	cmpb	$92, %al
+	je	.L70
 	subl	$12, %esp
 	.cfi_def_cfa_offset 28
 	pushl	$.LC1
 	.cfi_def_cfa_offset 32
 	call	printstring
+	addl	$16, %esp
+	.cfi_def_cfa_offset 16
+.L68:
+	subl	$12, %esp
+	.cfi_def_cfa_offset 28
+	addl	$16, y
+	movl	$0, x
+	pushl	$.LC9
+	.cfi_def_cfa_offset 32
+	call	printstring
+	addl	$16, y
+	movl	$0, x
+	call	waitforkey
+	movl	$-46, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $100
+/  0 "" 2
+/NO_APP
+	call	waitforkeyout
+	movl	$-11, %eax
+/APP
+/  10 "include/keyboard.h" 1
+	out %al, $96
+/  0 "" 2
+/NO_APP
 	addl	$28, %esp
 	.cfi_def_cfa_offset 4
 	ret
 	.align 16
-.L60:
+.L70:
 	.cfi_def_cfa_offset 16
-	pushl	$.LC5
+	pushl	$.LC7
 	.cfi_def_cfa_offset 20
 	call	printstring
-	addl	$16, y
-	pushl	$.LC6
+	pushl	$.LC8
 	.cfi_def_cfa_offset 24
+	addl	$16, y
 	movl	$0, x
 	call	printstring
-	addl	$20, %esp
-	.cfi_def_cfa_offset 4
-	jmp	hang
+	popl	%eax
+	.cfi_def_cfa_offset 20
+	popl	%edx
+	.cfi_def_cfa_offset 16
+	call	hang
+	jmp	.L68
 	.cfi_endproc
-.LFE6:
+.LFE7:
 	.size	initkeyboard, .-initkeyboard
-	.align 16
-	.globl	newline
-	.type	newline, @function
-newline:
-.LFB9:
-	.cfi_startproc
-	movl	$0, x
-	addl	$16, y
-	ret
-	.cfi_endproc
-.LFE9:
-	.size	newline, .-newline
-	.align 16
-	.globl	clearscreen
-	.type	clearscreen, @function
-clearscreen:
-.LFB10:
-	.cfi_startproc
-	movl	adr, %eax
-	pushl	%ebx
-	.cfi_def_cfa_offset 8
-	.cfi_offset 3, -8
-	movl	40(%eax), %ecx
-	leal	1280(%ecx), %ebx
-	.align 16
-.L63:
-	xorl	%eax, %eax
-	.align 16
-.L64:
-	movl	12272, %edx
-	imull	%eax, %edx
-	addl	$1, %eax
-	cmpl	$1024, %eax
-	movb	$0, (%edx,%ecx)
-	jne	.L64
-	addl	$1, %ecx
-	cmpl	%ecx, %ebx
-	jne	.L63
-	popl	%ebx
-	.cfi_restore 3
-	.cfi_def_cfa_offset 4
-	ret
-	.cfi_endproc
-.LFE10:
-	.size	clearscreen, .-clearscreen
 	.align 16
 	.globl	init_vbe
 	.type	init_vbe, @function
 init_vbe:
-.LFB11:
+.LFB12:
 	.cfi_startproc
 	subl	$84, %esp
 	.cfi_def_cfa_offset 88
@@ -467,17 +569,17 @@ init_vbe:
 	.cfi_def_cfa_offset 4
 	ret
 	.cfi_endproc
-.LFE11:
+.LFE12:
 	.size	init_vbe, .-init_vbe
 	.section	.rodata.str1.1
-.LC7:
+.LC10:
 	.string	"Kernel sucessfully loaded."
 	.text
 	.align 16
 	.globl	kernel_main
 	.type	kernel_main, @function
 kernel_main:
-.LFB12:
+.LFB13:
 	.cfi_startproc
 	subl	$12, %esp
 	.cfi_def_cfa_offset 16
@@ -485,7 +587,7 @@ kernel_main:
 	call	init_vbe
 	subl	$12, %esp
 	.cfi_def_cfa_offset 28
-	pushl	$.LC7
+	pushl	$.LC10
 	.cfi_def_cfa_offset 32
 	call	printstring
 	addl	$16, y
@@ -494,7 +596,7 @@ kernel_main:
 	.cfi_def_cfa_offset 4
 	jmp	initkeyboard
 	.cfi_endproc
-.LFE12:
+.LFE13:
 	.size	kernel_main, .-kernel_main
 	.comm	resolution_ptr,4,4
 	.globl	adr
@@ -4618,4 +4720,5 @@ iso_font:
 	.byte	6
 	.byte	3
 	.byte	0
+	.comm	temp,1,1
 	.ident	"GCC: (GNU) 7.1.0"

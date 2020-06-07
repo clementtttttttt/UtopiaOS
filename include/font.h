@@ -325,24 +325,6 @@ void putfont(unsigned char *e){
 }
 
 
-void printstring(unsigned char *d){
-        for(;*d!=0x00;d++){
-            if(x==1280){
-                y+=16;
-            }
-            if(x==1280&&y==1024){
-             clearscreen();   
-            }
-           
-            
-            putfont(iso_font+*d*16);
-                    x+=8;
-            
-            
-        }
-
-return;        
-}
 void newline(){
     x=0;
     y+=16;
@@ -363,3 +345,21 @@ void clearscreen(){
         }
 
     }
+void printstring(unsigned char *d){
+        for(;*d!=0x00;d++){
+            if(x==1280){
+                y+=16;
+            }
+            if(x==1280&&y==1024){
+             clearscreen();   
+            }
+           
+            
+            putfont(iso_font+*d*16);
+                    x+=8;
+            
+            
+        }
+
+return;        
+}
