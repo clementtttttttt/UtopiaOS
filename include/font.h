@@ -257,26 +257,57 @@ unsigned char iso_font[256*16] = {
 /* 254 */ 0x00,0x00,0x0f,0x06,0x06,0x3e,0x66,0x66,0x66,0x66,0x66,0x3e,0x06,0x06,0x0f,0x00,
 /* 255 */ 0x00,0x00,0x36,0x36,0x00,0x63,0x63,0x36,0x36,0x1c,0x1c,0x0c,0x0c,0x06,0x03,0x00
 };
-
+unsigned int x=0;
+unsigned int y=0;
 #define ISO_CHAR_MIN    0x00
 #define ISO_CHAR_MAX    0xFF
 #define ISO_CHAR_WIDTH  8
 #define ISO_CHAR_HEIGHT 16 
+void printglyph(unsigned char *e){
+    long framebuffer=public_mbd->framebuffer_addr;
+    unsigned int resolution;
+    resolution=public_mbd->framebuffer_width;
+    unsigned char i;
+    unsigned char s;
+    unsigned long *z;
 
-void printchar(char input,int y,int x){
-    int i;
-    char *p,d;
-    for(i=0;i<16;i++){
-        d=iso_font[i];
-        p=public_mbd->framebuffer_addr+(y+i)*public_mbd->framebuffer_width+x;
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
-        if ((d&0x80)!=0){p[0]=c;}
+
+    
+    for(i=0;i<17;i++){
+        z=(long*)framebuffer+(y+i)*resolution+x;
+        s=e[i];
+        
+		if ((s & 0x01) != 0) { z[0] = 0xffffffff; }
+		if ((s & 0x02) != 0) { z[1] = 0xffffffff; }
+		if ((s & 0x04) != 0) { z[2] = 0xffffffff; }
+		if ((s & 0x08) != 0) { z[3] = 0xffffffff; }
+		if ((s & 0x10) != 0) { z[4] = 0xffffffff; }
+		if ((s & 0x20) != 0) { z[5] = 0xffffffff; }
+		if ((s & 0x40) != 0) { z[6] = 0xffffffff; }
+		if ((s & 0x80) != 0) { z[7] = 0xffffffff; }
     }
-    return;
+    
+}
+void printstring(unsigned char *d){
+        for(;*d!=0x00;d++){
+            if(x==public_mbd->framebuffer_width){
+                y+=16;
+            }
+            if(x==public_mbd->framebuffer_width&&y==public_mbd->framebuffer_height){
+
+                
+            }
+          
+            
+            printglyph(iso_font+*d*16);
+                    x+=8;
+            
+            
+        }
+
+return;        
+}
+void newline(){
+        x=0;
+        y+=16;
 }
